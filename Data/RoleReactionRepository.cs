@@ -17,14 +17,19 @@ namespace indy_scca_discord_bot.Data
             return await _roleReactions.Find<RoleReaction>(roleReaction => roleReaction.MessageId == messageId).FirstOrDefaultAsync();
         }
 
+        public async Task<List<RoleReaction>> GetRoleReactionsAsync(ulong messageId)
+        {
+            return await _roleReactions.Find<RoleReaction>(roleReaction => roleReaction.MessageId == messageId).ToListAsync();
+        }
+
         public async Task CreateRoleReactionAsync(RoleReaction roleReaction)
         {
             await _roleReactions.InsertOneAsync(roleReaction);
         }
 
-        public async Task DeleteRoleReactionAsync(ulong messageId)
+        public async Task DeleteRoleReactionsAsync(ulong messageId)
         {
-            await _roleReactions.DeleteOneAsync(roleReaction => roleReaction.MessageId == messageId);
+            await _roleReactions.DeleteManyAsync(roleReaction => roleReaction.MessageId == messageId);
         }
     }
 }
