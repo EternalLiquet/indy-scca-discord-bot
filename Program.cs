@@ -9,6 +9,7 @@ using indy_scca_discord_bot.Services;
 using indy_scca_discord_bot.Util;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System.Diagnostics;
 
 namespace indy_scca_discord_bot
 {
@@ -44,8 +45,7 @@ namespace indy_scca_discord_bot
             _discordClient.Disconnected += (Exception e) =>
             {
                 Log.Error($"Bot disconnected: {e.Message}");
-                _discordClient.LoginAsync(TokenType.Bot, DotNetEnv.Env.GetString("DISCORD_TOKEN"));
-                _discordClient.StartAsync();
+                Restart();
                 return Task.CompletedTask;
             };
 
@@ -79,6 +79,18 @@ namespace indy_scca_discord_bot
             //_discordClient.SlashCommandExecuted += SlashCommandHandler;
 
             await Task.Delay(-1);
+        }
+
+        static void Restart()
+        {
+            // Get the path of the executable
+            var fileName = Process.GetCurrentProcess().MainModule.FileName;
+
+            // Start a new instance of the application
+            Process.Start(fileName);
+
+            // Exit the current instance
+            Environment.Exit(0);
         }
     }
 }
