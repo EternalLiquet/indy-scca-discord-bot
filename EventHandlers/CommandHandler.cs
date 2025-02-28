@@ -50,7 +50,6 @@ namespace indy_scca_discord_bot.EventHandlers
                 }
                 var finishedEmbed = roleEmbedMessage.Build();
                 var messageToListen = await command.Channel.SendMessageAsync(embed: finishedEmbed);
-                await command.RespondAsync("Roles have been set up", ephemeral: true);
                 foreach (var pair in pairs)
                 {
                     var emote = guild.Emotes.FirstOrDefault(e => e.Id.ToString() == pair.Key);
@@ -69,6 +68,8 @@ namespace indy_scca_discord_bot.EventHandlers
                 {
                     await _roleReactionRepository.CreateRoleReactionAsync(new RoleReaction() { MessageId = messageToListen.Id, ChannelId = command.ChannelId.Value, GuildId = command.GuildId.Value, EmoteId = pair.Key, RoleId = pair.Value });
                 }
+                // Moving this down here as using RespondAsync will terminate the rest of the method
+                await command.RespondAsync("Roles have been set up", ephemeral: true);
             }
         }
 
