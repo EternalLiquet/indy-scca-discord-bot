@@ -26,9 +26,11 @@ namespace indy_scca_discord_bot
             LoggingConfig.CreateLoggerConfiguration();
             _discordClient = new DiscordSocketClient(new DiscordSocketConfig
             {
+                GatewayIntents = GatewayIntents.Guilds
+                    | GatewayIntents.GuildMessages
+                    | GatewayIntents.GuildMessageReactions,
                 LogLevel = LogSeverity.Verbose,
-                MessageCacheSize = 100,
-                AlwaysDownloadUsers = true
+                MessageCacheSize = 100
             });
             _discordClient.Log += LogHandler.LogMessages;
 
